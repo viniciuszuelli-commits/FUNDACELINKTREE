@@ -108,7 +108,7 @@
       line-height: .92;
       letter-spacing: -3px;
     }
-    .subtitle { max-width: 760px; color: rgba(255,255,255,.78); font-size: 19px; line-height: 1.55; margin: 0; }
+    .subtitle { max-width: 820px; color: rgba(255,255,255,.78); font-size: 19px; line-height: 1.55; margin: 0; }
     main { max-width: 1180px; margin: -56px auto 70px; padding: 0 20px; position: relative; z-index: 2; }
     .control-panel {
       background: rgba(255,255,255,.92);
@@ -148,16 +148,18 @@
 
     .chips { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 14px; }
     .chip {
-      border: 1px solid rgba(254,183,55,.64);
-      background: #fff7e5;
+      border: 1px solid rgba(0,0,0,.16);
+      background: #fff;
       color: #000;
       padding: 10px 13px;
       border-radius: 999px;
       font-weight: 850;
       font-size: 13px;
+      transition: background .24s ease, color .24s ease, border-color .24s ease, transform .24s ease;
     }
-    .chip:hover { background: #ffe1a3; border-color: var(--yellow); }
+    .chip:hover { background: #000; color: #fff; border-color: #000; transform: translateY(-1px); }
     .chip.active { background: var(--yellow); color: #000; border-color: var(--yellow); }
+    .chip.active:hover { color: #000; }
 
     .section-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin: 34px 0 14px; }
     .section-head h2 { margin: 0; font-size: 28px; letter-spacing: -.8px; }
@@ -175,11 +177,21 @@
       box-shadow: 0 14px 34px rgba(0,0,0,.07);
       position: relative;
       overflow: hidden;
+      transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+      will-change: transform;
+    }
+    @media (hover: hover) {
+      .card:hover {
+        transform: translateY(-6px) scale(1.01);
+        border-color: rgba(254,183,55,.72);
+        box-shadow: 0 26px 62px rgba(0,0,0,.15);
+      }
     }
     .card.hidden-public { opacity: .5; }
     .card:before { content: ""; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--yellow); }
     .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 16px; }
     .tag { background: #fff4dc; color: #000; border: 1px solid rgba(254,183,55,.55); border-radius: 999px; padding: 7px 10px; font-size: 12px; font-weight: 900; }
+    .tag.modality { background: #000; border-color: #000; color: #fff; }
     .tag.off { background: #f1f1f1; border-color: #ddd; color: #777; }
     .card h3 { margin: 0 0 10px; font-size: 21px; line-height: 1.2; letter-spacing: -.3px; }
     .card p { margin: 0 0 18px; color: var(--muted); line-height: 1.45; flex: 1; }
@@ -247,9 +259,9 @@
 
       <div class="hero-grid">
         <div>
-          <span class="eyebrow">Central oficial de links</span>
-          <h1>Fundace em um clique.</h1>
-          <p class="subtitle">Cursos, MBAs, eventos, trilhas e Fundace Cast reunidos em uma página simples, rápida e bonita o bastante para aposentar o Linktree sem cerimônia fúnebre.</p>
+          <span class="eyebrow">Cursos por setor</span>
+          <h1>Fundace Hub.</h1>
+          <p class="subtitle">MBAs e trilhas organizados por área de atuação para encontrar a formação certa com rapidez, clareza e a presença institucional da Fundace.</p>
         </div>
       </div>
     </div>
@@ -258,7 +270,7 @@
   <main>
     <section class="control-panel">
       <div class="search-row">
-        <input class="search" id="search" placeholder="Buscar por curso, evento, trilha ou palavra-chave..." oninput="render()" />
+        <input class="search" id="search" placeholder="Buscar por curso, setor, modalidade ou palavra-chave..." oninput="render()" />
         <button class="btn light" onclick="resetFilters()">Limpar filtros</button>
       </div>
       <div class="chips" id="chips"></div>
@@ -267,17 +279,27 @@
     <section class="admin-panel" id="adminPanel">
       <div class="admin-box">
         <h2>Painel administrativo</h2>
-        <p>Adicione, edite, destaque, ative ou desative conteúdos. As alterações ficam salvas neste navegador via localStorage. Sim, tecnologia: milagre com ressalvas.</p>
+        <p>Adicione, edite, destaque, ative ou desative cursos e trilhas. As alterações ficam salvas neste navegador via localStorage.</p>
 
         <div class="form-grid">
           <input id="title" placeholder="Título" />
-          <select id="category">
-            <option>MBAs</option>
-            <option>Cursos de Extensão</option>
-            <option>Trilhas</option>
-            <option>Eventos</option>
-            <option>Fundace Cast</option>
-            <option>Institucional</option>
+          <select id="sector">
+            <option>Dados, IA e Tecnologia</option>
+            <option>Finanças e Contabilidade</option>
+            <option>Gestão, Liderança e Estratégia</option>
+            <option>Marketing, Vendas e Crescimento</option>
+            <option>Saúde</option>
+            <option>Esporte</option>
+          </select>
+          <select id="modality">
+            <option>EAD</option>
+            <option>Online</option>
+            <option>Presencial</option>
+            <option>Híbrido</option>
+          </select>
+          <select id="type">
+            <option value="curso">Curso</option>
+            <option value="trilha">Trilha</option>
           </select>
           <input id="url" class="full" placeholder="URL do conteúdo" />
           <textarea id="description" class="full" rows="3" placeholder="Descrição curta"></textarea>
@@ -303,7 +325,7 @@
     <section>
       <div class="section-head">
         <div>
-          <h2>Todos os links</h2>
+          <h2>Cursos e trilhas</h2>
           <p id="counter"></p>
         </div>
       </div>
@@ -311,7 +333,7 @@
     </section>
   </main>
 
-  <footer>Fundace Hub | Central de links editável para campanhas, redes sociais e páginas institucionais.</footer>
+  <footer>Fundace Hub | Cursos e trilhas por setor, com gestão editável para campanhas e páginas institucionais.</footer>
 
   <div class="modal" id="loginModal">
     <div class="login-card">
@@ -327,29 +349,69 @@
 
   <script>
     const ADMIN_PASSWORD = "Fund@123aCe#";
+    const STORAGE_KEY = "fundace_hub_sector_items";
+    const SECTORS = [
+      "Dados, IA e Tecnologia",
+      "Finanças e Contabilidade",
+      "Gestão, Liderança e Estratégia",
+      "Marketing, Vendas e Crescimento",
+      "Saúde",
+      "Esporte"
+    ];
     const originalItems = [
-      { id: 1, title: "MBA USP em Finanças", category: "MBAs", url: "https://www.fundace.org.br/curso/mba-usp-ead-em-financas", description: "Formação para quem quer tomar decisões financeiras melhores e se tornar mais estratégico para as empresas.", featured: true, active: true, order: 1 },
-      { id: 2, title: "MBA USP em Gestão Estratégica Baseada em Dados", category: "MBAs", url: "https://www.fundace.org.br/curso/mba-ead-em-gestao-estrategica-baseada-em-dados", description: "Para profissionais que querem usar dados para melhorar decisões, processos e resultados.", featured: true, active: true, order: 2 },
-      { id: 3, title: "MBA USP em Contabilidade em IFRS", category: "MBAs", url: "https://www.fundace.org.br/curso/mba-ead-usp-contabilidade-em-ifrs", description: "Conteúdo para profissionais de contabilidade que precisam acompanhar padrões internacionais e demandas do mercado.", featured: false, active: true, order: 3 },
-      { id: 4, title: "MBA EAD em Contabilidade Tributária", category: "MBAs", url: "https://www.fundace.org.br/curso/mba-ead-contabilidade-tributaria", description: "Especialização voltada à atuação tributária com visão prática e estratégica.", featured: false, active: true, order: 4 },
-      { id: 5, title: "MBA EAD em Gestão e Economia da Saúde", category: "MBAs", url: "https://www.fundace.org.br/curso/mba-ead-em-gestao-e-economia-da-saude", description: "Formação para quem busca atuar com gestão, eficiência e tomada de decisão no setor da saúde.", featured: false, active: true, order: 5 },
-      { id: 6, title: "Cursos de Extensão Fundace", category: "Cursos de Extensão", url: "https://www.fundace.org.br/cursos", description: "Cursos rápidos para desenvolver competências específicas sem transformar a agenda em um campo de batalha.", featured: false, active: true, order: 6 },
-      { id: 7, title: "Trilhas de Conhecimento", category: "Trilhas", url: "https://www.fundace.org.br/", description: "Sequências de aprendizado para evoluir com direção, e não apenas acumular certificados como figurinhas corporativas.", featured: false, active: true, order: 7 },
-      { id: 8, title: "Eventos Fundace", category: "Eventos", url: "https://www.fundace.org.br/eventos", description: "Acompanhe aulas abertas, encontros, webinars e experiências promovidas pela Fundace.", featured: true, active: true, order: 8 },
-      { id: 9, title: "Fundace Cast", category: "Fundace Cast", url: "https://www.youtube.com/@fundace", description: "Conversas sobre gestão, mercado, carreira e negócios para quem prefere aprender sem fingir que ama PDF de 80 páginas.", featured: true, active: true, order: 9 },
-      { id: 10, title: "Conheça a Fundace", category: "Institucional", url: "https://www.fundace.org.br/", description: "Saiba mais sobre a Fundação, sua atuação e sua conexão com a USP Ribeirão Preto.", featured: false, active: true, order: 10 }
+      { id: 1, title: "MBA USP em Gestão Estratégica Baseada em Dados", sector: "Dados, IA e Tecnologia", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/curso/mba-ead-em-gestao-estrategica-baseada-em-dados", description: "Formação para transformar dados em decisões estratégicas, indicadores e vantagem competitiva.", featured: true, active: true, order: 1 },
+      { id: 2, title: "MBA USP Gestão Estratégica da Tecnologia da Informação", sector: "Dados, IA e Tecnologia", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/cursos", description: "Visão gerencial de tecnologia, governança e inovação para liderar áreas de TI.", featured: false, active: true, order: 2 },
+      { id: 3, title: "MBA USP Produção e Operações e Aplicações em IA", sector: "Dados, IA e Tecnologia", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/cursos", description: "Gestão de operações com foco em produtividade, processos e uso prático de inteligência artificial.", featured: false, active: true, order: 3 },
+      { id: 4, title: "Trilha de Gestão de Produção com IA", sector: "Dados, IA e Tecnologia", modality: "Online", type: "trilha", url: "https://www.fundace.org.br/cursos", description: "Percurso prático para aplicar IA à gestão de produção, processos e eficiência operacional.", featured: false, active: true, order: 4 },
+      { id: 5, title: "MBA USP em Finanças", sector: "Finanças e Contabilidade", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/curso/mba-usp-ead-em-financas", description: "Formação para quem quer tomar decisões financeiras melhores e se tornar mais estratégico para as empresas.", featured: true, active: true, order: 5 },
+      { id: 6, title: "MBA USP em Contabilidade em IFRS", sector: "Finanças e Contabilidade", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/curso/mba-ead-usp-contabilidade-em-ifrs", description: "Conteúdo para profissionais de contabilidade que precisam acompanhar padrões internacionais e demandas do mercado.", featured: false, active: true, order: 6 },
+      { id: 7, title: "MBA EAD em Contabilidade Tributária", sector: "Finanças e Contabilidade", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/curso/mba-ead-contabilidade-tributaria", description: "Especialização voltada à atuação tributária com visão prática e estratégica.", featured: false, active: true, order: 7 },
+      { id: 8, title: "MBA USP Tecnologia da Informação Aplicada à Contabilidade Pública", sector: "Finanças e Contabilidade", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/cursos", description: "Integra tecnologia, sistemas e contabilidade pública para modernizar processos de gestão.", featured: false, active: true, order: 8 },
+      { id: 9, title: "Trilha em Contabilidade IFRS", sector: "Finanças e Contabilidade", modality: "Online", type: "trilha", url: "https://www.fundace.org.br/cursos", description: "Sequência de aprendizado para aprofundar normas internacionais e aplicação prática em contabilidade.", featured: false, active: true, order: 9 },
+      { id: 10, title: "MBA USP Gestão Pública e Sustentabilidade", sector: "Gestão, Liderança e Estratégia", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/cursos", description: "Formação para atuar com políticas públicas, governança e desenvolvimento sustentável.", featured: false, active: true, order: 10 },
+      { id: 11, title: "MBA USP Gestão do Direito nas Empresas", sector: "Gestão, Liderança e Estratégia", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/cursos", description: "Une gestão, estratégia e fundamentos jurídicos para decisões empresariais mais seguras.", featured: false, active: true, order: 11 },
+      { id: 12, title: "MBA USP Gestão Estratégica de Pessoas e Organizações Sustentáveis", sector: "Gestão, Liderança e Estratégia", modality: "Presencial", type: "curso", url: "https://www.fundace.org.br/cursos", description: "Desenvolve lideranças para gerir pessoas, cultura e sustentabilidade organizacional.", featured: false, active: true, order: 12 },
+      { id: 13, title: "MBA USP Gestão do Marketing Estratégico", sector: "Marketing, Vendas e Crescimento", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/cursos", description: "Planejamento, posicionamento e decisões de marketing conectadas ao crescimento do negócio.", featured: false, active: true, order: 13 },
+      { id: 14, title: "MBA USP Gestão Comercial e Salestech", sector: "Marketing, Vendas e Crescimento", modality: "Presencial", type: "curso", url: "https://www.fundace.org.br/cursos", description: "Gestão comercial com tecnologia, performance de vendas e processos de crescimento.", featured: false, active: true, order: 14 },
+      { id: 15, title: "Trilha de Marketing Estratégico", sector: "Marketing, Vendas e Crescimento", modality: "Online", type: "trilha", url: "https://www.fundace.org.br/cursos", description: "Percurso para fortalecer visão estratégica, posicionamento e execução de marketing.", featured: false, active: true, order: 15 },
+      { id: 16, title: "MBA EAD em Gestão e Economia da Saúde", sector: "Saúde", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/curso/mba-ead-em-gestao-e-economia-da-saude", description: "Formação para quem busca atuar com gestão, eficiência e tomada de decisão no setor da saúde.", featured: false, active: true, order: 16 },
+      { id: 17, title: "MBA USP Gestão do Esporte", sector: "Esporte", modality: "EAD", type: "curso", url: "https://www.fundace.org.br/cursos", description: "Gestão aplicada a organizações, projetos e negócios do esporte com visão estratégica.", featured: false, active: true, order: 17 }
     ];
 
-    let selectedCategory = "Todos";
+    let selectedSector = "Todos";
     let editingId = null;
     let draggedId = null;
 
-    function getItems() {
-      const saved = localStorage.getItem("fundace_hub_items");
-      if (!saved) return structuredClone(originalItems);
-      try { return JSON.parse(saved); } catch { return structuredClone(originalItems); }
+    function normalizeItem(item, index = 0) {
+      const title = item.title || "";
+      const fallbackSector = SECTORS.includes(item.category) ? item.category : SECTORS[0];
+      const sector = SECTORS.includes(item.sector) ? item.sector : fallbackSector;
+      const modality = item.modality || (title.includes("Presencial") ? "Presencial" : title.includes("Online") ? "Online" : "EAD");
+      const type = item.type || (/trilha/i.test(`${title} ${item.category || ""}`) ? "trilha" : "curso");
+      return {
+        id: item.id || Date.now() + index,
+        title,
+        sector,
+        modality,
+        type,
+        url: item.url || "https://www.fundace.org.br/cursos",
+        description: item.description || "",
+        featured: Boolean(item.featured),
+        active: item.active !== false,
+        order: item.order ?? index + 1
+      };
     }
-    function setItems(items) { localStorage.setItem("fundace_hub_items", JSON.stringify(items)); }
+    function getItems() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return structuredClone(originalItems);
+      try {
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) ? parsed.map(normalizeItem) : structuredClone(originalItems);
+      } catch {
+        return structuredClone(originalItems);
+      }
+    }
+    function setItems(items) { localStorage.setItem(STORAGE_KEY, JSON.stringify(items.map(normalizeItem))); }
     function isAdmin() { return sessionStorage.getItem("fundace_admin") === "true"; }
     function openLogin() { if (isAdmin()) { logoutAdmin(); return; } document.getElementById("loginModal").classList.add("show"); setTimeout(() => document.getElementById("password").focus(), 50); }
     function closeLogin() { document.getElementById("loginModal").classList.remove("show"); document.getElementById("password").value = ""; }
@@ -368,36 +430,38 @@
       document.getElementById("adminTopBtn").textContent = "Área administrativa";
       clearForm(); render();
     }
-    function resetFilters() { selectedCategory = "Todos"; document.getElementById("search").value = ""; render(); }
+    function resetFilters() { selectedSector = "Todos"; document.getElementById("search").value = ""; render(); }
     function resetData() {
       if (!confirm("Restaurar os conteúdos originais?")) return;
       setItems(structuredClone(originalItems)); clearForm(); render();
     }
-    function categories(items) {
-      return ["Todos", ...Array.from(new Set(items.map(i => i.category))).filter(cat => cat !== "Institucional").sort()];
-    }
+    function sectors() { return ["Todos", ...SECTORS]; }
     function visibleItems() {
       const q = document.getElementById("search").value.toLowerCase().trim();
       return getItems()
         .filter(i => i.active || isAdmin())
-        .filter(i => selectedCategory === "Todos" || i.category === selectedCategory)
-        .filter(i => `${i.title} ${i.category} ${i.description}`.toLowerCase().includes(q))
-        .sort((a,b) => (a.order ?? 999) - (b.order ?? 999));
+        .filter(i => selectedSector === "Todos" || i.sector === selectedSector)
+        .filter(i => `${i.title} ${i.sector} ${i.modality} ${i.type} ${i.description}`.toLowerCase().includes(q))
+        .sort((a,b) => Number(b.featured) - Number(a.featured) || (a.order ?? 999) - (b.order ?? 999));
     }
     function renderChips() {
-      document.getElementById("chips").innerHTML = categories(getItems()).map(cat => `<button class="chip ${cat === selectedCategory ? 'active' : ''}" onclick="selectedCategory='${cat}'; render()">${cat}</button>`).join("");
+      document.getElementById("chips").innerHTML = sectors().map(sector => `<button class="chip ${sector === selectedSector ? 'active' : ''}" onclick="selectedSector='${sector}'; render()">${sector}</button>`).join("");
     }
-    function cardButton(item) { return `<a class="btn yellow" href="${item.url}" target="_blank" rel="noopener noreferrer">Acessar</a>`; }
+    function formatType(type) { return type === "trilha" ? "Trilha" : "Curso"; }
+    function cardButton(item) {
+      const label = item.type === "trilha" ? "Conhecer trilha" : "Conhecer curso";
+      return `<a class="btn yellow" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+    }
     function renderCards() {
       const items = visibleItems();
-      document.getElementById("counter").textContent = `${items.filter(i => i.active).length} link(s) público(s) encontrado(s)`;
+      document.getElementById("counter").textContent = `${items.filter(i => i.active).length} conteúdo(s) encontrado(s)`;
       document.getElementById("cards").innerHTML = items.length ? items.map(i => `
         <article class="card ${!i.active ? 'hidden-public' : ''}">
-          <div class="tag-row"><span class="tag">${i.category}</span>${i.featured ? '<span class="tag">Destaque</span>' : ''}${!i.active ? '<span class="tag off">Oculto</span>' : ''}</div>
+          <div class="tag-row"><span class="tag modality">${escapeHtml(i.modality)}</span><span class="tag">${escapeHtml(i.sector)}</span><span class="tag">${formatType(i.type)}</span>${isAdmin() && i.featured ? '<span class="tag">Destaque</span>' : ''}${!i.active ? '<span class="tag off">Oculto</span>' : ''}</div>
           <h3>${escapeHtml(i.title)}</h3>
           <p>${escapeHtml(i.description)}</p>
           ${cardButton(i)}
-        </article>`).join("") : `<div class="empty">Nenhum link encontrado. Pequena catástrofe administrativa, mas dá para resolver.</div>`;
+        </article>`).join("") : `<div class="empty">Nenhum curso ou trilha encontrado.</div>`;
     }
     function renderAdminList() {
       if (!isAdmin()) return;
@@ -405,7 +469,7 @@
       document.getElementById("adminList").innerHTML = items.map(i => `
         <div class="admin-item" draggable="true" ondragstart="dragStart(${i.id})" ondragover="event.preventDefault()" ondrop="dropOn(${i.id})">
           <div class="drag">↕</div>
-          <div><strong>${escapeHtml(i.title)}</strong><small>${i.category} | ${i.active ? 'Ativo' : 'Oculto'}${i.featured ? ' | Destaque' : ''}<br>${escapeHtml(i.url)}</small></div>
+          <div><strong>${escapeHtml(i.title)}</strong><small>${escapeHtml(i.sector)} | ${escapeHtml(i.modality)} | ${formatType(i.type)} | ${i.active ? 'Ativo' : 'Oculto'}${i.featured ? ' | Destaque' : ''}<br>${escapeHtml(i.url)}</small></div>
           <div class="admin-buttons">
             <button class="btn light mini" onclick="toggleActive(${i.id})">${i.active ? 'Desativar' : 'Ativar'}</button>
             <button class="btn yellow mini" onclick="toggleFeatured(${i.id})">${i.featured ? 'Remover destaque' : 'Destacar'}</button>
@@ -417,11 +481,13 @@
     function saveItem() {
       const items = getItems();
       const title = document.getElementById("title").value.trim();
-      const category = document.getElementById("category").value.trim();
+      const sector = document.getElementById("sector").value.trim();
+      const modality = document.getElementById("modality").value.trim();
+      const type = document.getElementById("type").value;
       const url = document.getElementById("url").value.trim();
       const description = document.getElementById("description").value.trim();
-      if (!title || !category || !url) { alert("Preencha título, categoria e URL. O básico, infelizmente, continua obrigatório."); return; }
-      const data = { id: editingId || Date.now(), title, category, url, description, featured: document.getElementById("featured").value === "true", active: document.getElementById("active").value === "true", order: editingId ? (items.find(i => i.id === editingId)?.order ?? items.length + 1) : items.length + 1 };
+      if (!title || !sector || !modality || !url) { alert("Preencha título, setor, modalidade e URL."); return; }
+      const data = { id: editingId || Date.now(), title, sector, modality, type, url, description, featured: document.getElementById("featured").value === "true", active: document.getElementById("active").value === "true", order: editingId ? (items.find(i => i.id === editingId)?.order ?? items.length + 1) : items.length + 1 };
       setItems(editingId ? items.map(i => i.id === editingId ? data : i) : [...items, data]);
       clearForm(); render();
     }
@@ -429,7 +495,9 @@
       const i = getItems().find(x => x.id === id); if (!i) return;
       editingId = id;
       document.getElementById("title").value = i.title;
-      document.getElementById("category").value = i.category;
+      document.getElementById("sector").value = i.sector;
+      document.getElementById("modality").value = i.modality;
+      document.getElementById("type").value = i.type;
       document.getElementById("url").value = i.url;
       document.getElementById("description").value = i.description;
       document.getElementById("featured").value = String(i.featured);
@@ -439,7 +507,15 @@
     function deleteItem(id) { if (!confirm("Excluir este conteúdo?")) return; setItems(getItems().filter(i => i.id !== id)); render(); }
     function toggleActive(id) { setItems(getItems().map(i => i.id === id ? {...i, active: !i.active} : i)); render(); }
     function toggleFeatured(id) { setItems(getItems().map(i => i.id === id ? {...i, featured: !i.featured} : i)); render(); }
-    function clearForm() { editingId = null; ["title","url","description"].forEach(id => document.getElementById(id).value = ""); document.getElementById("category").value = "MBAs"; document.getElementById("featured").value = "false"; document.getElementById("active").value = "true"; }
+    function clearForm() {
+      editingId = null;
+      ["title","url","description"].forEach(id => document.getElementById(id).value = "");
+      document.getElementById("sector").value = SECTORS[0];
+      document.getElementById("modality").value = "EAD";
+      document.getElementById("type").value = "curso";
+      document.getElementById("featured").value = "false";
+      document.getElementById("active").value = "true";
+    }
     function dragStart(id) { draggedId = id; }
     function dropOn(targetId) {
       if (!draggedId || draggedId === targetId) return;
