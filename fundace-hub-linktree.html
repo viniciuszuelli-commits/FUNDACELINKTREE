@@ -89,7 +89,7 @@
     }
     .admin-login-btn:hover { background: rgba(254,183,55,.18); border-color: rgba(254,183,55,.7); }
 
-    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, .72fr); gap: 34px; align-items: end; }
+    .hero-grid { display: block; }
     .eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       border: 1px solid rgba(254,183,55,.48);
@@ -109,30 +109,6 @@
       letter-spacing: -3px;
     }
     .subtitle { max-width: 760px; color: rgba(255,255,255,.78); font-size: 19px; line-height: 1.55; margin: 0; }
-    .hero-card {
-      background: rgba(255,255,255,.08);
-      border: 1px solid var(--line-dark);
-      border-radius: var(--radius);
-      padding: 22px;
-      backdrop-filter: blur(18px);
-      box-shadow: 0 20px 70px rgba(0,0,0,.26);
-    }
-    .quick-title { font-weight: 950; font-size: 18px; margin-bottom: 12px; }
-    .quick-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .quick-link {
-      text-decoration: none;
-      border: 1px solid var(--line-dark);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(0,0,0,.22);
-      min-height: 86px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .quick-link strong { font-size: 26px; color: var(--yellow); }
-    .quick-link span { font-size: 13px; color: rgba(255,255,255,.74); }
-
     main { max-width: 1180px; margin: -56px auto 70px; padding: 0 20px; position: relative; z-index: 2; }
     .control-panel {
       background: rgba(255,255,255,.92);
@@ -172,43 +148,20 @@
 
     .chips { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 14px; }
     .chip {
-      border: 1px solid var(--line);
-      background: #fff;
+      border: 1px solid rgba(254,183,55,.64);
+      background: #fff7e5;
       color: #000;
       padding: 10px 13px;
       border-radius: 999px;
       font-weight: 850;
       font-size: 13px;
     }
-    .chip.active { background: #000; color: #fff; border-color: #000; }
-
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 22px 0; }
-    .stat { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 18px; box-shadow: 0 14px 34px rgba(0,0,0,.07); }
-    .stat strong { display: block; font-size: 32px; line-height: 1; }
-    .stat span { color: var(--muted); font-size: 13px; }
+    .chip:hover { background: #ffe1a3; border-color: var(--yellow); }
+    .chip.active { background: var(--yellow); color: #000; border-color: var(--yellow); }
 
     .section-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin: 34px 0 14px; }
     .section-head h2 { margin: 0; font-size: 28px; letter-spacing: -.8px; }
     .section-head p { margin: 6px 0 0; color: var(--muted); }
-
-    .featured-strip { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .feature {
-      position: relative; overflow: hidden;
-      background: #000;
-      color: #fff;
-      border-radius: 26px;
-      padding: 26px;
-      min-height: 230px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: var(--shadow);
-    }
-    .feature:after { content: ""; position: absolute; width: 220px; height: 220px; right: -70px; bottom: -90px; background: var(--yellow); border-radius: 50%; opacity: .72; }
-    .feature > * { position: relative; z-index: 1; }
-    .pill { display: inline-flex; width: fit-content; background: var(--yellow); color: #000; border-radius: 999px; padding: 8px 11px; font-weight: 950; font-size: 12px; }
-    .feature h3 { font-size: 28px; line-height: 1.05; margin: 18px 0 10px; letter-spacing: -.8px; }
-    .feature p { color: rgba(255,255,255,.72); margin: 0 0 20px; line-height: 1.45; }
 
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .card {
@@ -271,7 +224,7 @@
     footer { padding: 34px 20px 50px; text-align: center; color: var(--muted); font-size: 13px; }
 
     @media (max-width: 920px) {
-      .hero-grid, .featured-strip, .grid, .stats, .form-grid { grid-template-columns: 1fr; }
+      .grid, .form-grid { grid-template-columns: 1fr; }
       .hero { padding-bottom: 82px; }
       .topbar { margin-bottom: 42px; }
       .search-row { grid-template-columns: 1fr; }
@@ -298,10 +251,6 @@
           <h1>Fundace em um clique.</h1>
           <p class="subtitle">Cursos, MBAs, eventos, trilhas e Fundace Cast reunidos em uma página simples, rápida e bonita o bastante para aposentar o Linktree sem cerimônia fúnebre.</p>
         </div>
-        <aside class="hero-card">
-          <div class="quick-title">Acesse por área</div>
-          <div class="quick-grid" id="quickGrid"></div>
-        </aside>
       </div>
     </div>
   </header>
@@ -314,8 +263,6 @@
       </div>
       <div class="chips" id="chips"></div>
     </section>
-
-    <section class="stats" id="stats"></section>
 
     <section class="admin-panel" id="adminPanel">
       <div class="admin-box">
@@ -351,16 +298,6 @@
         </div>
         <div class="admin-list" id="adminList"></div>
       </div>
-    </section>
-
-    <section id="featuredSection">
-      <div class="section-head">
-        <div>
-          <h2>Destaques</h2>
-          <p>Conteúdos que merecem aparecer primeiro.</p>
-        </div>
-      </div>
-      <div class="featured-strip" id="featuredCards"></div>
     </section>
 
     <section>
@@ -447,44 +384,10 @@
         .filter(i => `${i.title} ${i.category} ${i.description}`.toLowerCase().includes(q))
         .sort((a,b) => (a.order ?? 999) - (b.order ?? 999));
     }
-    function renderQuickGrid() {
-      const items = getItems().filter(i => i.active);
-      const cats = ["MBAs", "Eventos", "Trilhas", "Fundace Cast"];
-      document.getElementById("quickGrid").innerHTML = cats.map(cat => `
-        <a class="quick-link" href="#" onclick="selectedCategory='${cat}'; render(); window.scrollTo({top: document.querySelector('main').offsetTop - 20, behavior:'smooth'}); return false;">
-          <strong>${items.filter(i => i.category === cat).length}</strong>
-          <span>${cat}</span>
-        </a>
-      `).join("");
-    }
     function renderChips() {
       document.getElementById("chips").innerHTML = categories(getItems()).map(cat => `<button class="chip ${cat === selectedCategory ? 'active' : ''}" onclick="selectedCategory='${cat}'; render()">${cat}</button>`).join("");
     }
-    function renderStats() {
-      const items = getItems();
-      const active = items.filter(i => i.active).length;
-      const featured = items.filter(i => i.active && i.featured).length;
-      const cats = new Set(items.filter(i => i.active).map(i => i.category)).size;
-      document.getElementById("stats").innerHTML = `
-        <div class="stat"><strong>${active}</strong><span>links ativos</span></div>
-        <div class="stat"><strong>${cats}</strong><span>categorias</span></div>
-        <div class="stat"><strong>${featured}</strong><span>destaques</span></div>
-        <div class="stat"><strong>${items.length}</strong><span>conteúdos cadastrados</span></div>`;
-    }
     function cardButton(item) { return `<a class="btn yellow" href="${item.url}" target="_blank" rel="noopener noreferrer">Acessar</a>`; }
-    function renderFeatured() {
-      const items = getItems().filter(i => i.active && i.featured).sort((a,b) => (a.order ?? 999) - (b.order ?? 999)).slice(0, 4);
-      document.getElementById("featuredSection").style.display = items.length ? "block" : "none";
-      document.getElementById("featuredCards").innerHTML = items.map(i => `
-        <article class="feature">
-          <div>
-            <span class="pill">${i.category}</span>
-            <h3>${escapeHtml(i.title)}</h3>
-            <p>${escapeHtml(i.description)}</p>
-          </div>
-          ${cardButton(i)}
-        </article>`).join("");
-    }
     function renderCards() {
       const items = visibleItems();
       document.getElementById("counter").textContent = `${items.filter(i => i.active).length} link(s) público(s) encontrado(s)`;
@@ -554,7 +457,7 @@
     function escapeHtml(str) { return String(str || "").replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
     function render() {
       if (isAdmin()) { document.body.classList.add("admin-on"); document.getElementById("adminTopBtn").textContent = "Sair do admin"; }
-      renderQuickGrid(); renderChips(); renderStats(); renderFeatured(); renderCards(); renderAdminList();
+      renderChips(); renderCards(); renderAdminList();
     }
     render();
   </script>
